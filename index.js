@@ -176,6 +176,7 @@ const guildMap = new Map();
 discordClient.on('message', async (msg) => {
     try {
         if (!('guild' in msg) || !msg.guild) return; // prevent private messages to bot
+        if(!msg.member.hasPermission('ADMINISTRATOR')){return;}
         const mapKey = msg.guild.id;
         if (msg.content.trim().toLowerCase() == _CMD_JOIN) {
             if (!msg.member.voice.channelID) {
@@ -345,7 +346,7 @@ function speak_impl(voice_Connection, mapKey) {
 function process_commands_query(txt, mapKey, user) {
     if (txt && txt.length) {
         let val = guildMap.get(mapKey);
-        val.text_Channel.send(user.username + ': ' + txt)
+        val.text_Channel.send('**' + user.username + '**: ' + txt)
     }
 }
 
