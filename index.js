@@ -60,6 +60,7 @@ const SETTINGS_FILE = 'settings.json';
 let DISCORD_TOK = null;
 let WITAI_TOK = null; 
 let SPEECH_METHOD = 'vosk'; // witai, google, vosk
+let VOSK_MODEL = 'en-0.22-lgraph'
 
 function loadConfig() {
     if (fs.existsSync(SETTINGS_FILE)) {
@@ -293,7 +294,7 @@ if (SPEECH_METHOD === 'vosk') {
   vosk.setLogLevel(-1);
   // MODELS: https://alphacephei.com/vosk/models
   recs = {
-    'en': new vosk.Recognizer({model: new vosk.Model('vosk_models/en'), sampleRate: 48000}),
+    'en': new vosk.Recognizer({model: new vosk.Model('vosk_models/' + VOSK_MODEL), sampleRate: 48000}),
     // 'fr': new vosk.Recognizer({model: new vosk.Model('vosk_models/fr'), sampleRate: 48000}),
     // 'es': new vosk.Recognizer({model: new vosk.Model('vosk_models/es'), sampleRate: 48000}),
   }
