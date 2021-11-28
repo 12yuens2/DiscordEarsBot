@@ -268,7 +268,7 @@ async function connect(msg, mapKey) {
         let text_Channel = await discordClient.channels.fetch(msg.channel.id);
         if (!text_Channel) return msg.reply("Error: The text channel does not exist!");
         let voice_Connection = await voice_Channel.join();
-        voice_Connection.play(new Silence(), { type: 'opus' });
+        voice_Connection.play(new Silence());
         guildMap.set(mapKey, {
             'text_Channel': text_Channel,
             'voice_Channel': voice_Channel,
@@ -397,11 +397,19 @@ async function transcribe_witai(buffer) {
         witAI_lastcallTS = Math.floor(new Date());
         console.log(output)
         stream.destroy()
-        if (output && '_text' in output && output._text.length)
-            return output._text
-        if (output && 'text' in output && output.text.length)
-            return output.text
-        return output;
+        try {
+            const data = JSON.parse(output); 
+	    return data.text;
+	} catch (e) {
+            const chunks = output.split('\r\n');
+            const lastChunk = chunks.pop();
+            const data = JSON.parse(lastChunk);
+            return data.text;
+	}
+        //if (output && '_text' in output && output._text.length)
+        //    return output._text
+        //if (output && 'text' in output && output.text.length)
+        //return output;
     } catch (e) { console.log('transcribe_witai 851:' + e); console.log(e) }
 }
 
