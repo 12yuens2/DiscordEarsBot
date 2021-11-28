@@ -326,8 +326,7 @@ function speak_impl(voice_Connection, mapKey) {
 
             if (SPEECH_METHOD === 'witai' || SPEECH_METHOD === 'google') {
             if (duration < 1.0 || duration > 19) { // 20 seconds max dur
-                console.log("TOO SHORT / TOO LONG; SKPPING")
-                return;
+                console.log("TOO SHORT / TOO LONG for " + SPEECH_METHOD)
             }
             }
 
@@ -335,6 +334,7 @@ function speak_impl(voice_Connection, mapKey) {
                 let new_buffer = await convert_audio(buffer)
                 let out = await transcribe(new_buffer, mapKey);
                 if (out == null && SPEECH_METHOD != 'vosk') {
+                    new_buffer = await convert_audio(buffer)
                     out = await transcribe_vosk(new_buffer, mapKey);
                 }
                 if (out != null)
