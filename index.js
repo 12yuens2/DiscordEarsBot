@@ -321,6 +321,7 @@ function speak_impl(voice_Connection, mapKey) {
         })
         audioStream.on('end', async () => {
             buffer = Buffer.concat(buffer)
+            backup_buffer = Buffer.from(buffer)
             const duration = buffer.length / 48000 / 4;
             console.log("duration: " + duration)
 
@@ -334,9 +335,10 @@ function speak_impl(voice_Connection, mapKey) {
                 let new_buffer = await convert_audio(buffer)
                 let out = await transcribe(new_buffer, mapKey);
                 if (out == null && SPEECH_METHOD != 'vosk') {
-                    new_buffer = await convert_audio(buffer)
-                    out = await transcribe_vosk(new_buffer, mapKey);
+                    let new_backup = await convert_audio(backup_buffer)
+                    out = await transcribe_vosk(new_backup, mapKey);
                 }
+
                 if (out != null)
                     process_commands_query(out, mapKey, user);
             } catch (e) {
