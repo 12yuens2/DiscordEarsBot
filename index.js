@@ -334,6 +334,9 @@ function speak_impl(voice_Connection, mapKey) {
             try {
                 let new_buffer = await convert_audio(buffer)
                 let out = await transcribe(new_buffer, mapKey);
+                if (out == null && SPEECH_METHOD != 'vosk') {
+                    out = await transcribe_vosk(new_buffer, mapKey);
+                }
                 if (out != null)
                     process_commands_query(out, mapKey, user);
             } catch (e) {
@@ -362,12 +365,17 @@ async function transcribe(buffer, mapKey) {
   } else if (SPEECH_METHOD === 'google') {
       return transcribe_gspeech(buffer)
   } else if (SPEECH_METHOD === 'vosk') {
-      let val = guildMap.get(mapKey);
-      recs[val.selected_lang].acceptWaveform(buffer);
-      let ret = recs[val.selected_lang].result().text;
-      console.log('vosk:', ret)
-      return ret;
+      return transcribe_vosk(buffer, mapKey)
   }
+}
+
+// Vosk
+async function transcribe_vosk(buffer, mapKey) {
+    let val = guildMap.get(mapKey);
+    recs[val.selected_lang].acceptWaveform(buffer);
+    let ret = recs[val.selected_lang].result().text;
+    console.log('vosk:', ret);
+    return ret;
 }
 
 // WitAI
@@ -386,6 +394,7 @@ async function transcribe_witai(buffer) {
         }
     } catch (e) {
         console.log('transcribe_witai 837:' + e)
+        return null
     }
 
     try {
@@ -410,7 +419,11 @@ async function transcribe_witai(buffer) {
         //    return output._text
         //if (output && 'text' in output && output.text.length)
         //return output;
-    } catch (e) { console.log('transcribe_witai 851:' + e); console.log(e) }
+    } catch (e) {
+        console.log('transcribe_witai 851:' + e);
+        console.log(e)
+        return null
+    }
 }
 
 // Google Speech API
