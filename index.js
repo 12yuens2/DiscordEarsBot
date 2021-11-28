@@ -268,7 +268,7 @@ async function connect(msg, mapKey) {
         let text_Channel = await discordClient.channels.fetch(msg.channel.id);
         if (!text_Channel) return msg.reply("Error: The text channel does not exist!");
         let voice_Connection = await voice_Channel.join();
-        voice_Connection.play(new Silence());
+        voice_Connection.play(new Silence(), { type: 'opus' });
         guildMap.set(mapKey, {
             'text_Channel': text_Channel,
             'voice_Channel': voice_Channel,
