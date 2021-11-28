@@ -160,6 +160,7 @@ if (process.env.DEBUG)
     discordClient.on('debug', console.debug);
 discordClient.on('ready', () => {
     console.log(`Logged in as ${discordClient.user.tag}!`)
+    console.log('Using ' + SPEECH_METHOD)
 })
 discordClient.login(DISCORD_TOK)
 
