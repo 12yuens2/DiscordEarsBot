@@ -321,9 +321,12 @@ function speak_impl(voice_Connection, mapKey) {
         })
         audioStream.on('end', async () => {
             buffer = Buffer.concat(buffer)
-            backup_buffer = Buffer.from(buffer)
+            let backup_buffer = Buffer.from(buffer)
             const duration = buffer.length / 48000 / 4;
             console.log("duration: " + duration)
+
+            console.log("buffer: " + Buffer.byteLength(buffer))
+            console.log("Backup: " + Buffer.byteLength(backup_buffer))
 
             if (SPEECH_METHOD === 'witai' || SPEECH_METHOD === 'google') {
             if (duration < 1.0 || duration > 19) { // 20 seconds max dur
@@ -343,6 +346,9 @@ function speak_impl(voice_Connection, mapKey) {
                     process_commands_query(out, mapKey, user);
             } catch (e) {
                 console.log('tmpraw rename: ' + e)
+
+                console.log("buffer: " + Buffer.byteLength(buffer))
+                console.log("Backup: " + Buffer.byteLength(backup_buffer))
             }
 
 
