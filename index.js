@@ -291,16 +291,15 @@ async function connect(msg, mapKey) {
 
 const vosk = require('vosk');
 let recs = {}
-if (SPEECH_METHOD === 'vosk') {
-  vosk.setLogLevel(-1);
-  // MODELS: https://alphacephei.com/vosk/models
-  recs = {
-    'en': new vosk.Recognizer({model: new vosk.Model('vosk_model'), sampleRate: 48000}),
+vosk.setLogLevel(-1);
+
+// MODELS: https://alphacephei.com/vosk/models
+// download new models if you need
+// dev reference: https://github.com/alphacep/vosk-api/blob/master/nodejs/index.js
+recs = {
+  'en': new vosk.Recognizer({model: new vosk.Model('vosk_model'), sampleRate: 48000}),
     // 'fr': new vosk.Recognizer({model: new vosk.Model('vosk_models/fr'), sampleRate: 48000}),
     // 'es': new vosk.Recognizer({model: new vosk.Model('vosk_models/es'), sampleRate: 48000}),
-  }
-  // download new models if you need
-  // dev reference: https://github.com/alphacep/vosk-api/blob/master/nodejs/index.js
 }
 
 
